@@ -1,115 +1,103 @@
-# Intelligent Insect & Animal Monitoring System
+# Smart Insect Detector
 
-## Tech Stack
-- **Backend**: Python, Flask
-- **Machine Learning**: TensorFlow, OpenCV, Ultralytics (YOLO)
-- **Frontend**: HTML, CSS, JavaScript
-- **Database**: MySQL (SQLAlchemy ORM)
+This repository contains an edge-to-cloud IoT platform for detecting insects, animals, and crop issues using edge inference, sensor telemetry, and an interactive dashboard.
 
-## Project Structure
+See the investor-ready overview in `README_STARTUP.md` and architecture notes in `docs/architecture.md`.
+
+**High-level tech stack**
+- Backend: FastAPI, Uvicorn, SQLAlchemy, PostgreSQL
+- Edge: Python, ONNX Runtime / OpenVINO (optional), Pi Camera, Adafruit DHT, MCP3008
+- Frontend: React, Tailwind CSS, WebSockets
+- Messaging: MQTT (Mosquitto)
+
+## Project layout (relevant folders)
 ```
-smart-insect-detector/
-├── insect_monitoring_system/
-│   └── backend/
-│       ├── app/
-│       │   ├── __init__.py
-│       │   ├── main.py          # Flask application
-│       │   ├── templates/       # HTML templates
-│       │   │   └── index.html
-│       │   ├── static/          # CSS, JS, images
-│       │   │   ├── css/
-│       │   │   │   └── main.css
-│       │   │   └── js/
-│       │   │       └── main.js
-│       │   ├── api/             # API endpoints
-│       │   │   └── v1/
-│       │   │       └── endpoints/
-│       │   ├── db/              # Database models
-│       │   │   ├── models/
-│       │   │   └── session.py
-│       │   ├── ml_models/       # Machine learning models
-│       │   │   ├── insect/
-│       │   │   ├── animal/
-│       │   │   ├── audio/
-│       │   │   └── recommendation/
-│       │   └── utils/           # Utility functions
-│       └── requirements.txt     # Python dependencies
-├── datasets/                    # Training and testing data
-├── deployment/                  # Docker files and deployment configs
-├── docs/                        # Documentation
-├── config.py                   # Application configuration
-├── run.py                      # Main application runner
-└── test_app.py                 # Test script
+.
+├── backend_fastapi/         # FastAPI backend, models, API, MQTT worker
+├── insect_monitoring_system/frontend/  # React dashboard
+├── tools/                  # Model conversion & benchmarking scripts
+├── sensors/ vision/ actuator/ mqtt_client/  # Edge node modules
+├── datasets/               # (large) training data — consider Git LFS
+├── docs/                   # Architecture and setup docs
+└── README_STARTUP.md       # Startup-grade README
 ```
 
-## Features
-- Real-time insect and animal detection using computer vision
-- Audio-based detection for nocturnal monitoring
-- Dashboard for monitoring detection results
-- Alert system for potential threats
-- Recommendation engine for pest control measures
-- Heatmap visualization of infestation patterns
-- **Real-time weather tracking** for disease prediction and irrigation planning
+## Quick start (developer)
 
-## Weather Integration
+1) Backend (Windows / dev):
 
-The system now includes real-time weather tracking using the **Open-Meteo API** (completely free, no API key required). The weather data includes:
+```powershell
+cd backend_fastapi
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+python -m pip install --upgrade pip
+pip install -r requirements-dev.txt
+copy .env.example .env
+# edit .env to set DATABASE_URL
+alembic revision --autogenerate -m "init"
+alembic upgrade head
+python -m app.main
+```
 
-- Current temperature
-- Humidity levels
-- Wind speed
-- Weather conditions (clear, cloudy, rain, etc.)
-
-Weather data is displayed on the dashboard and can be used for:
-- Disease prediction models
-- Irrigation recommendations
-- Alert timing based on weather conditions
-
-### Supported Locations
-- Nashik (default)
-- Mumbai
-- Pune
-- Delhi
-
-To add more locations, update the coordinates in the weather endpoint.
-
-## Installation
-
-1. Install Python 3.8 or higher
-2. Install dependencies:
-   ```bash
-   pip install -r insect_monitoring_system/backend/requirements.txt
-   ```
-
-## Running the Application
+2) Frontend:
 
 ```bash
-python run.py
+cd insect_monitoring_system/frontend
+npm install
+npm start
 ```
 
-The application will be available at http://127.0.0.1:5000
+3) Edge (Raspberry Pi) — on the Pi:
 
-## API Endpoints
+```bash
+# Install Pi-specific packages on the Pi
+pip3 install -r requirements.txt  # on the Pi, not on Windows
+# Ensure ONNX model is available at ./models
+python main.py  # runs the edge node
+```
 
-- `GET /` - Main dashboard
-- `GET /api/health` - Health check
-- `GET /api/stats` - Get detection statistics
-- `GET /api/weather/current` - Get current weather data
-- `GET /api/weather/history` - Get weather history
-- `POST /api/start_detection` - Start detection process
-- `POST /api/stop_detection` - Stop detection process
+# Smart Insect Detector
 
-## Machine Learning Models
+Edge-to-cloud agricultural monitoring platform: edge inference (insect/animal detection), sensor telemetry ingestion, and a responsive dashboard.
 
-The system uses:
-- YOLO models for insect and animal detection
-- Audio processing models for sound-based detection
-- Coverage analysis models for infestation pattern recognition
+Quickstart (developer)
 
-## Contributing
+- Backend (development):
 
-1. Fork the repository
-2. Create a feature branch
-3. Commit your changes
-4. Push to the branch
-5. Create a pull request
+	```powershell
+	cd insect_monitoring_system/backend
+	python -m venv venv
+	.\venv\Scripts\Activate.ps1
+	pip install -r requirements-dev.txt
+	copy .env.example .env
+	# set DATABASE_URL in .env for production DBs
+	alembic upgrade head
+	python -m app.main
+	```
+
+- Frontend (development):
+
+	```powershell
+	cd insect_monitoring_system/frontend
+	npm install
+	npm start
+	```
+
+Recent updates
+
+- Added multilingual support (English / Hindi / Marathi) and Devanagari fonts for proper rendering.
+- Improved settings save/load flow and synced SPA/server language keys (`language` and `i18nextLng`).
+- Added server-side logging for `/api/settings` to aid debugging.
+
+Notes
+
+- Large datasets live under `datasets/`. For sharing or pushes, consider using Git LFS or pruning large files.
+- Platform-specific packages (Pi libraries) should be installed on a Raspberry Pi, not on Windows.
+
+Docs and structure
+
+- Backend: `insect_monitoring_system/backend`
+- Frontend: `insect_monitoring_system/frontend`
+- Docs: `docs/`
+
+If you'd like, I can scan the frontend for remaining hardcoded UI strings and convert them to translation keys.
