@@ -294,11 +294,21 @@ function applyTranslations(language = 'en') {
         titleElement.textContent = getTranslation(titleKey, language);
     }
     
-    // Store current language in localStorage
-    localStorage.setItem('language', language);
+    // Store current language in localStorage (sync both keys used across the app)
+    try {
+        localStorage.setItem('language', language);
+        localStorage.setItem('i18nextLng', language);
+    } catch (e) { /* localStorage may be unavailable in some contexts */ }
     
     // Dispatch custom event for other scripts to listen to language changes
     document.dispatchEvent(new CustomEvent('languageChanged', { detail: { language: language } }));
+
+    // If the React/i18n instance is loaded on the page, notify it as well
+    try {
+        if (window.i18n && typeof window.i18n.changeLanguage === 'function') {
+            window.i18n.changeLanguage(language);
+        }
+    } catch (e) { /* ignore if react app not present */ }
 }
 
 // Export for use in other scripts

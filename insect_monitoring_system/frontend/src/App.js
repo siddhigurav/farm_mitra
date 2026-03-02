@@ -8,6 +8,11 @@ import Signup from './components/Auth/Signup';
 import Dashboard from './components/Dashboard/Dashboard';
 import AddCrop from './components/Dashboard/AddCrop/AddCrop';
 import CropHistory from './components/Dashboard/CropHistory/CropHistory';
+import Overview from './pages/Overview';
+import LiveCamera from './pages/LiveCamera';
+import Analytics from './pages/Analytics';
+import Irrigation from './pages/Irrigation';
+import CropManagement from './pages/CropManagement';
 import Profile from './components/Profile/Profile';
 import './App.css';
 
@@ -44,7 +49,11 @@ const DashboardRoutes = () => {
     return (
         <DashboardLayout>
             <Routes>
-                <Route path="/" element={<Dashboard />} />
+                <Route path="/" element={<Overview />} />
+                <Route path="/live" element={<LiveCamera />} />
+                <Route path="/analytics" element={<Analytics />} />
+                <Route path="/irrigation" element={<Irrigation />} />
+                <Route path="/crops" element={<CropManagement />} />
                 <Route path="/add-crop" element={<AddCrop />} />
                 <Route path="/crop-history" element={<CropHistory />} />
                 <Route path="/profile" element={<Profile />} />

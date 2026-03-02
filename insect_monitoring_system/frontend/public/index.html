@@ -4,6 +4,36 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Insect Monitoring System</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="msapplication-TileColor" content="#0b6e4f" />
+  <!-- Enable multilingual support (Devanagari fonts for Hindi/Marathi) -->
+  <meta http-equiv="Content-Language" content="en,hi,mr" />
+  <link rel="alternate" hreflang="en" href="/" />
+  <link rel="alternate" hreflang="hi" href="/" />
+  <link rel="alternate" hreflang="mr" href="/" />
+  <!-- Noto Sans Devanagari provides good coverage for Hindi/Marathi -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;700&family=Noto+Sans:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    html { font-family: 'Noto Sans', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; }
+    /* Use Devanagari font when the page language is Hindi/Marathi */
+    html[lang="hi"], html[lang="mr"] {
+      font-family: 'Noto Sans Devanagari', 'Noto Sans', system-ui, sans-serif;
+    }
+  </style>
+  <script>
+    // Basic client-side language detection: set <html lang> from navigator if hi/mr
+    (function() {
+      try {
+        const nav = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+        const primary = nav.split('-')[0];
+        if (primary === 'hi' || primary === 'mr') {
+          document.documentElement.lang = primary;
+        }
+      } catch (e) { /* ignore */ }
+    })();
+  </script>
 </head>
 <body>
   <div id="root"></div>

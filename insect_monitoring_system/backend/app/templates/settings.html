@@ -60,7 +60,7 @@
                 <div class="section-card">
                     <h2><i class="fas fa-cog"></i> <span data-i18n="applicationSettings">Application Settings</span></h2>
                     
-                    <div id="settings-message" class="message" style="display: none;"></div>
+                    <div id="settings-message" class="message" hidden></div>
                     
                     <form id="settings-form" class="crop-form">
                         <div class="form-row">
@@ -202,10 +202,16 @@
                         body: JSON.stringify(settingsData)
                     });
                     
-                    const data = await response.json();
-                    
+                    let data = null;
+                    try {
+                        data = await response.json();
+                    } catch (e) {
+                        // Non-JSON response
+                        data = null;
+                    }
+
                     if (response.ok) {
-                        showMessage(data.message, 'success');
+                        showMessage((data && data.message) ? data.message : 'Settings updated successfully', 'success');
                         // Apply theme if changed
                         if (typeof themeManager !== 'undefined') {
                             themeManager.applyTheme(settingsData.theme);
@@ -215,19 +221,25 @@
                         // Apply language if changed
                         if (typeof translations !== 'undefined') {
                             translations.applyTranslations(settingsData.language);
-                            // Store language preference in localStorage
-                            localStorage.setItem('language', settingsData.language);
+                            // Store language preference in localStorage and i18next key for SPA sync
+                            try {
+                                localStorage.setItem('language', settingsData.language);
+                                localStorage.setItem('i18nextLng', settingsData.language);
+                            } catch (e) { /* ignore */ }
                             // Reload the page to apply translations to all elements
                             setTimeout(() => {
                                 location.reload();
-                            }, 1000);
+                            }, 800);
                         }
                     } else {
-                        showMessage(data.error, 'error');
+                        // Prefer server-provided error message, fall back to generic
+                        const errMsg = (data && (data.error || data.message)) ? (data.error || data.message) : 'Failed to update settings';
+                        showMessage(errMsg, 'error');
                     }
                 } catch (error) {
                     console.error('Error updating settings:', error);
-                    showMessage('Error updating settings. Please try again.', 'error');
+                    // Show network/exception message to help debugging
+                    showMessage('Error updating settings. Please check your network and try again.', 'error');
                 }
             }
             

@@ -1,0 +1,8 @@
+paho-mqtt>=1.6.1
+numpy
+opencv-python
+onnxruntime; platform_system == "Linux"
+ultralytics
+Adafruit-DHT
+spidev
+picamera; platform_system == "Linux"

@@ -7,6 +7,7 @@ parent_dir = os.path.dirname(current_dir)
 sys.path.insert(0, parent_dir)
 
 from flask import Flask, jsonify, render_template, request, session, redirect, url_for
+import logging
 from flask_cors import CORS
 from datetime import datetime
 from app.db.session import SessionLocal
@@ -28,6 +29,15 @@ app = Flask(__name__,
             static_folder='static')
 app.secret_key = 'smart_farming_secret_key'  # For session management
 CORS(app)  # Enable CORS for all routes
+
+# Configure basic logging
+logger = logging.getLogger('smart_farming')
+if not logger.handlers:
+    handler = logging.StreamHandler()
+    formatter = logging.Formatter('%(asctime)s %(levelname)s %(name)s: %(message)s')
+    handler.setFormatter(formatter)
+    logger.addHandler(handler)
+logger.setLevel(logging.INFO)
 
 # Initialize database
 from app.db.init_db import init_db
@@ -166,15 +176,18 @@ def update_profile():
 def get_settings():
     if "user_id" not in session:
         return jsonify({"error": "Not authenticated"}), 401
-    
+    logger.info('/api/settings GET - user_id=%s session_keys=%s', session.get('user_id'), list(session.keys()))
+
     # Return user-specific settings from session, with defaults if not set
-    return jsonify({
+    settings_payload = {
         "notifications": session.get("notifications", True),
         "email_alerts": session.get("email_alerts", True),
         "sms_alerts": session.get("sms_alerts", False),
         "language": session.get("language", "en"),
         "theme": session.get("theme", "light")
-    })
+    }
+    logger.info('/api/settings GET -> %s', settings_payload)
+    return jsonify(settings_payload)
 
 @app.route("/api/settings", methods=["PUT"])
 def update_settings():
@@ -182,6 +195,7 @@ def update_settings():
         return jsonify({"error": "Not authenticated"}), 401
     
     data = request.get_json()
+    logger.info('/api/settings PUT - incoming payload: %s', data)
     
     # Validate language option if provided
     valid_languages = ["en", "mr", "hi"]
@@ -196,11 +210,13 @@ def update_settings():
     # Filter only the fields we want to update
     allowed_fields = ["notifications", "email_alerts", "sms_alerts", "language", "theme"]
     filtered_data = {key: value for key, value in data.items() if key in allowed_fields}
+    logger.info('/api/settings PUT - filtered fields: %s', filtered_data)
     
     # Store settings in session
     for key, value in filtered_data.items():
         session[key] = value
     session.modified = True  # Ensure session is saved
+    logger.info('/api/settings PUT - session after update keys=%s', list(session.keys()))
     
     # In a real app, this would update user-specific settings in the database
     # For now, we'll just return the updated settings

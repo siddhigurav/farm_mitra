@@ -1,3 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+venv/
+.venv/
+env/
+ENV/
+.env
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Node
+node_modules/
+
+# Data and models
+datasets/
+*.h5
+*.pt
+*.onnx
+models/
+
+# Images and large binaries
+*.jpg
+*.jpeg
+*.png
+*.mp4
+*.wav
+
+# SQLite
+*.db
+*.sqlite3
+
+# IDEs
+.vscode/
+.idea/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

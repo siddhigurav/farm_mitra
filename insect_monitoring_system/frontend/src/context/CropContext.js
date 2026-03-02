@@ -1,3 +1,30 @@
+import React, { createContext, useState, useContext } from 'react';
+
+const CropContext = createContext(null);
+
+export const CropProvider = ({ children }) => {
+  const [crops, setCrops] = useState([]);
+
+  const addCrop = (crop) => {
+    setCrops((prev) => [...prev, crop]);
+  };
+
+  const removeCrop = (id) => {
+    setCrops((prev) => prev.filter((c) => c.id !== id));
+  };
+
+  return (
+    <CropContext.Provider value={{ crops, addCrop, removeCrop }}>
+      {children}
+    </CropContext.Provider>
+  );
+};
+
+export const useCrop = () => {
+  return useContext(CropContext);
+};
+
+export default CropContext;
 
 import React, { createContext, useState, useContext } from 'react';
 
