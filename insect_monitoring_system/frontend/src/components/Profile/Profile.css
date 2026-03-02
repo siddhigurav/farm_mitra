@@ -1,0 +1,32 @@
+
+.profile-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f5f5f5;
+}
+
+.profile-card {
+    background-color: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+}
+
+.profile-card h2 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #4CAF50;
+}
+
+.profile-info p {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.profile-info strong {
+    color: #555;
+}

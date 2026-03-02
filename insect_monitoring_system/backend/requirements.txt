@@ -1,0 +1,12 @@
+flask
+flask-cors
+sqlalchemy
+pymysql
+python-multipart
+ultralytics
+librosa
+tensorflow
+opencv-python
+pydantic-settings
+python-dotenv
+requests

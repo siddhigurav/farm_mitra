@@ -1,0 +1,28 @@
+
+.crop-history-container {
+    padding: 2rem;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.crop-history-container h2 {
+    color: #2E8B57; /* SeaGreen */
+    margin-bottom: 1.5rem;
+}
+
+.crop-history-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.crop-history-table th, .crop-history-table td {
+    border: 1px solid #ddd;
+    padding: 0.75rem;
+    text-align: left;
+}
+
+.crop-history-table th {
+    background-color: #f2f2f2;
+    color: #333;
+}

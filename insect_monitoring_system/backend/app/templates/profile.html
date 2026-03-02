@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-i18n="userProfile">Profile - Smart Farming Dashboard</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Mukta:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo">
+                <h2><i class="fas fa-leaf"></i> SmartFarm</h2>
+            </div>
+            <nav class="nav-menu">
+                <a href="#" class="nav-link" data-page="dashboard">
+                    <i class="fas fa-seedling"></i>
+                    <span data-i18n="dashboardNav">Dashboard</span>
+                </a>
+                <a href="#" class="nav-link active" data-page="profile">
+                    <i class="fas fa-user"></i>
+                    <span data-i18n="profileNav">Profile</span>
+                </a>
+                <a href="#" class="nav-link" data-page="settings">
+                    <i class="fas fa-cog"></i>
+                    <span data-i18n="settingsNav">Settings</span>
+                </a>
+                <a href="#" class="nav-link" id="logout-link">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span data-i18n="logout">Logout</span>
+                </a>
+            </nav>
+            <div class="tip-card">
+                <h4><i class="fas fa-lightbulb"></i> <span data-i18n="tipOfDay">Tip of the Day</span></h4>
+                <p id="daily-tip" data-i18n="waterTip">Water your crops early in the morning to reduce evaporation loss.</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <h1 data-i18n="userProfile">User Profile</h1>
+                <div class="user-summary">
+                    <span data-i18n="farmer">Farmer</span>: <strong id="username">Farmer</strong>
+                    <div class="weather-widget">
+                        <i class="fas fa-sun"></i>
+                        <span>24°C, Sunny</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Profile Content -->
+            <section class="dashboard-content">
+                <div class="section-card">
+                    <h2><i class="fas fa-user-circle"></i> <span data-i18n="profileInformation">Profile Information</span></h2>
+                    
+                    <div id="profile-message" class="message" style="display: none;"></div>
+                    
+                    <form id="profile-form" class="crop-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="profile-username"><i class="fas fa-user"></i> <span data-i18n="username">Username</span></label>
+                                <input type="text" id="profile-username" name="username" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="profile-email"><i class="fas fa-envelope"></i> <span data-i18n="email">Email</span></label>
+                                <input type="email" id="profile-email" name="email" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="profile-password"><i class="fas fa-lock"></i> <span data-i18n="newPassword">New Password (leave blank to keep current)</span></label>
+                                <input type="password" id="profile-password" name="password">
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn-primary">
+                            <i class="fas fa-save"></i> <span data-i18n="updateProfile">Update Profile</span>
+                        </button>
+                    </form>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/theme-manager.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/translations.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/navigation.js') }}"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const profileForm = document.getElementById('profile-form');
+            const messageElement = document.getElementById('profile-message');
+            const usernameElement = document.getElementById('username');
+            
+            // Load user profile
+            loadUserProfile();
+            
+            // Handle profile form submission
+            if (profileForm) {
+                profileForm.addEventListener('submit', handleProfileUpdate);
+            }
+            
+            // Set active nav link
+            document.querySelector('.nav-link[data-page="profile"]').classList.add('active');
+            
+            // Load user profile
+            async function loadUserProfile() {
+                try {
+                    const response = await fetch('/api/profile');
+                    if (response.ok) {
+                        const user = await response.json();
+                        document.getElementById('profile-username').value = user.username;
+                        document.getElementById('profile-email').value = user.email;
+                        if (usernameElement) {
+                            usernameElement.textContent = user.username;
+                        }
+                    } else {
+                        // Redirect to login if not authenticated
+                        window.location.href = '/login';
+                    }
+                } catch (error) {
+                    console.error('Error loading user profile:', error);
+                    showMessage('Error loading profile information', 'error');
+                }
+            }
+            
+            // Handle profile update
+            async function handleProfileUpdate(event) {
+                event.preventDefault();
+                
+                const username = document.getElementById('profile-username').value;
+                const email = document.getElementById('profile-email').value;
+                const password = document.getElementById('profile-password').value;
+                
+                const updateData = { username, email };
+                if (password) {
+                    updateData.password = password;
+                }
+                
+                try {
+                    const response = await fetch('/api/profile', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(updateData)
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        showMessage(data.message, 'success');
+                        // Update username in header
+                        if (usernameElement) {
+                            usernameElement.textContent = data.user.username;
+                        }
+                    } else {
+                        showMessage(data.error, 'error');
+                    }
+                } catch (error) {
+                    console.error('Error updating profile:', error);
+                    showMessage('Error updating profile. Please try again.', 'error');
+                }
+            }
+            
+            // Handle logout
+            async function handleLogout(e) {
+                e.preventDefault();
+                
+                try {
+                    const response = await fetch('/api/logout', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        window.location.href = '/login';
+                    }
+                } catch (error) {
+                    console.error('Error logging out:', error);
+                    window.location.href = '/login';
+                }
+            }
+            
+            // Set up navigation
+            function setupNavigation() {
+                const navLinks = document.querySelectorAll('.nav-link');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        
+                        // Get the page from data attribute
+                        const page = this.getAttribute('data-page');
+                        
+                        // Handle navigation
+                        if (page === 'profile') {
+                            window.location.href = '/profile';
+                        } else if (page === 'settings') {
+                            window.location.href = '/settings';
+                        } else if (page === 'dashboard') {
+                            window.location.href = '/';
+                        }
+                    });
+                });
+            }
+            
+            // Show message
+            function showMessage(message, type) {
+                messageElement.textContent = message;
+                messageElement.className = 'message ' + type;
+                messageElement.style.display = 'block';
+                
+                // Hide message after 5 seconds
+                setTimeout(() => {
+                    messageElement.style.display = 'none';
+                }, 5000);
+            }
+        });
+    </script>
+</body>
+</html>

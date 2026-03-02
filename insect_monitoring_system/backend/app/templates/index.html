@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Farming Dashboard - Grapes & Guava Monitoring</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <h2>Smart Farming</h2>
+            </div>
+            <div class="sidebar-menu">
+                <a href="/" class="menu-item active" id="dashboard-link">
+                    <span>Dashboard</span>
+                </a>
+                <a href="/profile" class="menu-item" id="profile-link">
+                    <span>Profile</span>
+                </a>
+                <a href="/settings" class="menu-item" id="settings-link">
+                    <span>Settings</span>
+                </a>
+                <a href="#" class="menu-item" id="logout-link">
+                    <span>Logout</span>
+                </a>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <header>
+                <div class="header-content">
+                    <div class="header-left">
+                        <h1>Smart Farming Dashboard</h1>
+                        <p>Specialized Monitoring System for Grapes & Guava Crops</p>
+                    </div>
+                    <div class="header-right">
+                        <div class="user-info">
+                            <span id="username">Farmer</span>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            
+            <main>
+                <section class="dashboard">
+                    <h2>Farmer Dashboard</h2>
+                    
+                    <div class="add-crop-section">
+                        <h3>Add New Crop</h3>
+                        <form id="add-crop-form" class="crop-form">
+                            <div class="form-group">
+                                <label for="crop-name">Crop Name:</label>
+                                <select id="crop-name" required>
+                                    <option value="">Select Crop</option>
+                                    <option value="Grapes">Grapes</option>
+                                    <option value="Guava">Guava</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="crop-variety">Variety:</label>
+                                <input type="text" id="crop-variety" placeholder="e.g., Thompson Seedless" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="planting-date">Planting Date:</label>
+                                <input type="date" id="planting-date" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="area-hectares">Area (Hectares):</label>
+                                <input type="number" id="area-hectares" step="0.01" min="0" placeholder="e.g., 2.5" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="irrigation-type">Irrigation Type:</label>
+                                <select id="irrigation-type" required>
+                                    <option value="">Select Type</option>
+                                    <option value="Drip">Drip</option>
+                                    <option value="Sprinkler">Sprinkler</option>
+                                    <option value="Flood">Flood</option>
+                                </select>
+                            </div>
+                            
+                            <button type="submit" class="submit-btn">Add Crop</button>
+                        </form>
+                    </div>
+                    
+                    <div class="crops-section">
+                        <h3>Registered Crops</h3>
+                        <div class="crop-list" id="crop-list">
+                            <!-- Crops will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <div class="stats">
+                        <div class="stat-card">
+                            <h3>Total Crops</h3>
+                            <p id="crop-count">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Pests Detected</h3>
+                            <p id="pest-count">0</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3>Pending Approvals</h3>
+                            <p id="approval-count">0</p>
+                        </div>
+                    </div>
+                    
+                    <div class="detections-section">
+                        <h3>Recent Pest Detections</h3>
+                        <div class="detection-list" id="detection-list">
+                            <!-- Detections will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <div class="approvals-section">
+                        <h3>Pending Farmer Approvals</h3>
+                        <div class="approval-list" id="approval-list">
+                            <!-- Approvals will be populated here -->
+                        </div>
+                    </div>
+                    
+                    <div class="sensor-data-section">
+                        <h3>Latest Sensor Readings</h3>
+                        <div class="sensor-data" id="sensor-data">
+                            <p>No sensor data available. IoT devices will populate this section.</p>
+                        </div>
+                    </div>
+                </section>
+            </main>
+            
+            <footer>
+                <p>&copy; 2025 Smart Farming Monitoring System</p>
+            </footer>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>
