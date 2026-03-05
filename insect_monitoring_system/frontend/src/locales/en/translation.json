@@ -37,5 +37,7 @@
   "stage": "Stage",
   "suggested_pesticides": "Suggested pesticides",
   "no_data": "No data",
-  "no_crops": "No crops added yet."
+  "no_crops": "No crops added yet.",
+  "settings": "Settings",
+  "language": "Language"
 }

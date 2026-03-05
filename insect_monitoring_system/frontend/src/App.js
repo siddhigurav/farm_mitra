@@ -14,6 +14,7 @@ import Analytics from './pages/Analytics';
 import Irrigation from './pages/Irrigation';
 import CropManagement from './pages/CropManagement';
 import Profile from './components/Profile/Profile';
+import Settings from './pages/Settings';
 import './App.css';
 
 const PrivateRoute = ({ children }) => {
@@ -57,6 +58,7 @@ const DashboardRoutes = () => {
                 <Route path="/add-crop" element={<AddCrop />} />
                 <Route path="/crop-history" element={<CropHistory />} />
                 <Route path="/profile" element={<Profile />} />
+                <Route path="/settings" element={<Settings />} />
             </Routes>
         </DashboardLayout>
     );

@@ -35,6 +35,7 @@ const Sidebar = () => {
                 <li><Link to="/dashboard/add-crop">{t('add_crop')}</Link></li>
                 <li><Link to="/dashboard/crop-history">{t('crop_history')}</Link></li>
                 <li><Link to="/dashboard/profile">{t('profile')}</Link></li>
+                <li><Link to="/dashboard/settings">{t('settings')}</Link></li>
                 <li><button onClick={handleLogout} className="logout-button">{t('logout')}</button></li>
             </ul>
             <div className="sidebar-footer">
